@@ -1,0 +1,8 @@
+.env
+.direnv/
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+node_modules/
+dist/

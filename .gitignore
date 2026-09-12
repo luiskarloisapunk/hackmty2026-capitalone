@@ -6,3 +6,7 @@ __pycache__/
 .ipynb_checkpoints/
 node_modules/
 dist/
+.env
+.env
+atlas-credentials.env
+atlas-credentials.env

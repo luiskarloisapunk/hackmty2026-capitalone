@@ -12,15 +12,15 @@ def list_customers():
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/")
-def create_customer(customer: dict):
+async def create_customer(customer: dict):
     try:
-        return crear_cliente(**customer)
+        return await crear_cliente(**customer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/{customer_id}/accounts/savings")
-def create_savings_account(customer_id: str, nickname: str, balance: float):
+async def create_savings_account(customer_id: str, nickname: str, balance: float):
     try:
-        return crear_cuenta_ahorro(customer_id, nickname, balance)
+        return await crear_cuenta_ahorro(customer_id, nickname, balance)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

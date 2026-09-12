@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from app.services.nessie_client import nessie
+from app.services.cliente import crear_cliente, crear_cuenta_ahorro
 
 router = APIRouter(prefix="/api/customers", tags=["customers"])
-
 
 @router.get("/")
 def list_customers():
@@ -11,10 +11,16 @@ def list_customers():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @router.post("/")
 def create_customer(customer: dict):
     try:
-        return nessie.post("/customers", customer)
+        return crear_cliente(**customer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/{customer_id}/accounts/savings")
+def create_savings_account(customer_id: str, nickname: str, balance: float):
+    try:
+        return crear_cuenta_ahorro(customer_id, nickname, balance)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

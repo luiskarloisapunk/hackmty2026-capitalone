@@ -17,10 +17,11 @@ services:
     build: ./backend
     env_file: .env
     environment:
-      # Sobrescribe MONGODB_URI para usar el servicio interno de Docker.
-      # Si prefieren que el stack pegue a Atlas, comenten esta línea y dejen
-      # que tome la MONGODB_URI del .env.
-      MONGODB_URI: mongodb://mongodb:27017
+      # Usa la MONGODB_URI del .env (Atlas) si está definida, para que los
+      # datos sean los mismos que en `make dev` y entre todo el equipo. Si
+      # no hay credenciales, cae al Mongo del contenedor y el stack sigue
+      # funcionando solo, sin depender de nada externo.
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongodb:27017}
       # Siembra las 3 cuentas de demo al arrancar si todavía no existen.
       SEED_DEMO: "true"
     ports:

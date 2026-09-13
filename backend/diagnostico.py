@@ -105,7 +105,19 @@ def revisar_mongo() -> list[str]:
         db = cliente["hackmty_db"]
         usuarios = db["usuarios"].count_documents({})
         perfiles = db["perfiles_negocio"].count_documents({})
+
+        # Cuál base es importa: la de Atlas la comparte el equipo, la del
+        # contenedor es tuya y nada más. Confundirlas hace pensar que se
+        # perdieron datos cuando en realidad están en la otra.
+        if "mongodb+srv" in uri or "mongodb.net" in uri:
+            cual = "Atlas (compartida con el equipo)"
+        elif "localhost" in uri or "mongodb:27017" in uri:
+            cual = "Mongo local del contenedor (datos solo tuyos)"
+        else:
+            cual = uri.split("@")[-1].split("/")[0]
+
         print(f"  {OK} Mongo responde · {usuarios} usuarios, {perfiles} perfiles de negocio")
+        print(f"      Conectado a: {cual}")
         if perfiles == 0:
             print(f"  {AVISO} No hay negocios. Corre: python seed_demo.py")
     except Exception as e:

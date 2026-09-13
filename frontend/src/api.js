@@ -1,4 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// En el build de producción el frontend lo sirve nginx, que proxea /api al
+// backend en el mismo origen: por eso la base va vacía y las rutas quedan
+// relativas. En desarrollo Vite corre aparte del backend, así que apunta a
+// su puerto. VITE_API_URL permite forzar otra cosa si hiciera falta.
+//
+// Ojo con el `??`: la base vacía es un valor válido, y con `||` se caía al
+// default y las peticiones salían a /api/api/... (404).
+const API_URL =
+  import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? '' : 'http://localhost:8000')
 
 const CLAVE_TOKEN = 'acdc_token'
 

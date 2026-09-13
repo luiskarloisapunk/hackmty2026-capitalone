@@ -3,7 +3,9 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # Proxy /api/* → backend container (misma red Docker).
+    # Proxy /api/* → backend. ${BACKEND_HOST} lo resuelve el entrypoint de
+    # nginx al arrancar: "backend" en modo red bridge, "127.0.0.1" cuando
+    # se corre con network_mode: host.
     #
     # El upstream va en una variable a propósito: con el nombre literal,
     # nginx lo resuelve al arrancar y el contenedor entero se cae con
@@ -13,7 +15,7 @@ server {
     # sirviendo aunque el backend esté caído o reiniciándose.
     location /api/ {
         resolver           127.0.0.11 ipv6=off valid=10s;
-        set                $backend_upstream backend;
+        set                $backend_upstream ${BACKEND_HOST};
         proxy_pass         http://$backend_upstream:8000$request_uri;
         proxy_http_version 1.1;
         proxy_set_header   Host $host;

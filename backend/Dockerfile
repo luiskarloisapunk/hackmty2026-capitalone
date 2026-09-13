@@ -2,15 +2,12 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalar dependencias antes de copiar el código para aprovechar la caché
+# Instalar dependencias antes de copiar el código para aprovechar la caché.
+# Instala directo desde pyproject.toml (única fuente de verdad) en vez de
+# duplicar la lista a mano -- eso se desincroniza en cuanto alguien agrega
+# una dependencia nueva y no se acuerda de tocar este archivo también.
 COPY pyproject.toml .
-RUN pip install --no-cache-dir \
-    "fastapi>=0.111" \
-    "uvicorn[standard]>=0.29" \
-    "httpx>=0.27" \
-    "python-dotenv>=1.0" \
-    "numpy>=1.26" \
-    "motor>=3.4"
+RUN pip install --no-cache-dir .
 
 COPY app/ app/
 

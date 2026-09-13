@@ -1,73 +1,30 @@
-import { useState, useEffect } from 'react'
-import { obtenerClientes, obtenerCuentas } from './api'
+import { useState } from 'react'
+import { Cuentas } from './components/Cuentas'
+import { Resumen } from './components/Resumen'
+import { Sidebar } from './components/Sidebar'
 import './App.css'
 
+const TITULO_SECCION = {
+  resumen: 'Resumen',
+  cuentas: 'Clientes y cuentas',
+}
+
 function App() {
-  const [clientes, setClientes] = useState([])
-  const [clienteSeleccionado, setClienteSeleccionado] = useState(null)
-  const [cuentas, setCuentas] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    obtenerClientes()
-      .then(setClientes)
-      .catch((e) => setError(e.message))
-      .finally(() => setCargando(false))
-  }, [])
-
-  const verCuentas = async (cliente) => {
-    setClienteSeleccionado(cliente)
-    setCuentas([])
-    try {
-      const data = await obtenerCuentas(cliente._id)
-      setCuentas(data)
-    } catch (e) {
-      setError(e.message)
-    }
-  }
+  const [seccion, setSeccion] = useState('resumen')
 
   return (
-    <div className="pantalla">
-      <h1 className="titulo">Clientes</h1>
+    <div className="shell">
+      <Sidebar seccionActiva={seccion} onCambiarSeccion={setSeccion} />
 
-      {cargando && <p className="texto">Cargando...</p>}
-      {error && <p className="texto error">{error}</p>}
+      <div className="contenido">
+        <header className="topbar">
+          <h1 className="topbar-titulo">{TITULO_SECCION[seccion]}</h1>
+        </header>
 
-      {!cargando && !error && (
-        <ul className="lista">
-          {clientes.map((cliente) => (
-            <li key={cliente._id}>
-              <button
-                type="button"
-                className="boton"
-                onClick={() => verCuentas(cliente)}
-              >
-                {cliente.first_name} {cliente.last_name}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {clienteSeleccionado && (
-        <div className="detalle">
-          <h2 className="subtitulo">
-            Cuentas de {clienteSeleccionado.first_name}
-          </h2>
-          {cuentas.length === 0 ? (
-            <p className="texto">Sin cuentas registradas.</p>
-          ) : (
-            <ul className="lista">
-              {cuentas.map((cuenta) => (
-                <li key={cuenta._id} className="texto">
-                  {cuenta.nickname || cuenta.type} — ${cuenta.balance}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+        <main className="pagina">
+          {seccion === 'resumen' ? <Resumen /> : <Cuentas />}
+        </main>
+      </div>
     </div>
   )
 }

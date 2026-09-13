@@ -27,6 +27,7 @@ from app.modelo import (
     aggregate_daily_cashflow,
     simulate_nessie_transactions,
 )
+from app.services.banxico_client import obtener_tasa_cetes_28_dias
 
 router = APIRouter(prefix="/api/treasury", tags=["treasury"])
 
@@ -43,8 +44,14 @@ class AnalyzeRequest(BaseModel):
     )
     lag: int = Field(default=14, ge=2, le=60, description="Orden p del modelo AR")
     horizon: int = Field(default=30, ge=1, le=90, description="Días a proyectar")
-    annual_rate: float = Field(
-        default=0.065, gt=0.0, lt=1.0, description="Tasa de interés anual (decimal)"
+    annual_rate: float | None = Field(
+        default=None,
+        gt=0.0,
+        lt=1.0,
+        description=(
+            "Tasa de interés anual (decimal). Si es null, se usa la tasa "
+            "vigente de Cetes a 28 días publicada por Banxico."
+        ),
     )
     current_balance: float | None = Field(
         default=None,
@@ -71,6 +78,8 @@ class AnalyzeResponse(BaseModel):
     worst_day: int
     projected_deficit: float
     current_balance: float
+    annual_rate_used: float
+    annual_rate_source: str
     working_capital: WorkingCapitalRec | None
     message: str
 
@@ -128,12 +137,19 @@ def analyze_treasury(body: AnalyzeRequest) -> AnalyzeResponse:
     )
 
     # Paso 5 — Recomendación de inversión
+    if body.annual_rate is not None:
+        annual_rate = body.annual_rate
+        annual_rate_source = "manual"
+    else:
+        annual_rate = obtener_tasa_cetes_28_dias()
+        annual_rate_source = "cetes_28_dias_banxico"
+
     wc_rec: WorkingCapitalRec | None = None
     message = "Sin déficit proyectado en el horizonte analizado."
 
     if projected_deficit < 0:
         years_to_deficit = (worst_idx + 1) / 365.0
-        advisor = WorkingCapitalAdvisor(annual_rate=body.annual_rate)
+        advisor = WorkingCapitalAdvisor(annual_rate=annual_rate)
         coverage = advisor.surplus_coverage(
             surplus=max(balance, 0.0),
             deficit=abs(projected_deficit),
@@ -157,6 +173,8 @@ def analyze_treasury(body: AnalyzeRequest) -> AnalyzeResponse:
         worst_day=worst_idx + 1,
         projected_deficit=round(projected_deficit, 2),
         current_balance=round(balance, 2),
+        annual_rate_used=round(annual_rate, 4),
+        annual_rate_source=annual_rate_source,
         working_capital=wc_rec,
         message=message,
     )

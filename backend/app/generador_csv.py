@@ -37,23 +37,31 @@ elif comp == 2:
 
     ruido = np.random.normal(1.0, 0.03, meses)
     valores = (valores * ruido).round(2)
-    
 
+
+# Gasto en inventario/insumos: un % VARIABLE del ingreso de cada mes (no un
+# porcentaje fijo), para que la relación gasto/ingreso se parezca más a la
+# de un negocio real en vez de ser siempre la misma proporción.
+porcentaje_min = float(input("Porcentaje mínimo de gasto en inventario sobre el ingreso (ej. 0.25): "))
+porcentaje_max = float(input("Porcentaje máximo de gasto en inventario sobre el ingreso (ej. 0.45): "))
+porcentaje_gasto = np.random.uniform(porcentaje_min, porcentaje_max, meses)
+gasto_inventario = (valores * porcentaje_gasto).round(2)
 
 fechas = pd.date_range(start=f'{inicio}-01-01', periods=meses, freq='MS')
 
 df = pd.DataFrame({
     'fecha': fechas.strftime('%Y-%m'),  # formatea como "2025-01" en vez de fecha completa
-    'valores': valores
+    'valores': valores,
+    'gasto_inventario': gasto_inventario,
 })
 print(df)
 df.to_csv('historial_financiero.csv', index=False)
 
 
-df.plot(x='fecha', y='valores', kind='line', figsize=(12, 5))
+df.plot(x='fecha', y=['valores', 'gasto_inventario'], kind='line', figsize=(12, 5))
 plt.title('Historial Financiero')
 plt.xlabel('Fecha')
-plt.ylabel('Ingresos')
+plt.ylabel('Monto')
 plt.xticks(rotation=45)  # rota las fechas para que no se encimen
 plt.tight_layout()
 plt.show()

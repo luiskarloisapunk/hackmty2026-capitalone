@@ -40,3 +40,24 @@ async def crear_cuenta_ahorro(customer_id: str, nickname: str, balance: float):
     )
 
     return resultado_nessie
+
+async def crear_cuenta_inversion(customer_id: str, nickname: str, balance: float):
+    body = {
+        "type": "Investment",
+        "nickname": nickname,
+        "rewards": 0,
+        "balance": balance
+    }
+    resultado_nessie = nessie.post(f"/customers/{customer_id}/accounts", body)
+    account_id = resultado_nessie["objectCreated"]["_id"]
+
+    await negocios_collection.update_one(
+        {"nessie_customer_id": customer_id},
+        {"$push": {"cuentas": {
+            "nessie_account_id": account_id,
+            "nickname": nickname,
+            "balance": balance,
+        }}}
+    )
+
+    return resultado_nessie

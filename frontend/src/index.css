@@ -1,11 +1,44 @@
 :root {
   color-scheme: light;
-  font: 18px/145% system-ui, 'Segoe UI', Roboto, sans-serif;
+  font: 16px/145% 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  /* Marca (paleta oficial del logo de Capital One) */
+  --color-primary: #004879; /* Dark Water */
+  --color-primary-hover: #003a61;
+  --color-accent: #D22E1E; /* Deep Coral */
+
+  /* Estados de temporada -- alta (caliente) / regular / baja (fría),
+     separados en matiz Y en luminosidad para que no dependan solo del
+     color (accesibilidad para daltonismo). Siempre acompañar con texto
+     o ícono en la UI, nunca solo el color. */
+  --color-temporada-alta: #D22E1E;
+  --color-temporada-alta-bg: #FBE4E1;
+  --color-temporada-regular: #E29D12;
+  --color-temporada-regular-bg: #FBF0DA;
+  --color-temporada-baja: #097167;
+  --color-temporada-baja-bg: #DCF0EE;
+
+  /* Neutros (con un tinte frío sutil, del mismo matiz que --color-primary) */
+  --color-neutral-900: #131516;
+  --color-neutral-800: #212427;
+  --color-neutral-700: #34393D;
+  --color-neutral-500: #5E686E;
+  --color-neutral-300: #919BA1;
+  --color-neutral-200: #C2C8CB;
+  --color-neutral-100: #E3E6E8;
+  --color-neutral-50: #F4F5F6;
+
+  --color-bg: #ffffff;
+  --color-surface: var(--color-neutral-50);
+  --color-text: var(--color-neutral-900);
+  --color-text-muted: var(--color-neutral-500);
+  --color-border: var(--color-neutral-200);
 }
 
 body {
   margin: 0;
-  background-color: #ffffff;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 #root {

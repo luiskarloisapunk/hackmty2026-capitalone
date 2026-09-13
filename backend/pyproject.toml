@@ -7,5 +7,10 @@ dependencies = [
     "uvicorn[standard]",
     "httpx",
     "python-dotenv",
+    "pandas",
     "numpy>=1.26",
+    "motor",
+    "bcrypt",
+    "pyjwt",
+    "email-validator",
 ]

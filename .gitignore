@@ -13,3 +13,6 @@ build/
 .env
 atlas-credentials.env
 atlas-credentials.env
+
+# Notas internas del equipo (no publicar)
+CONTEXTO_PROYECTO.md

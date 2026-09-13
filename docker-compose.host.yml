@@ -1,0 +1,27 @@
+# Override para entornos donde la red bridge de Docker está filtrada y los
+# contenedores no se alcanzan entre sí (pasa en Codespaces y en algunos
+# Docker-in-Docker): los contenedores arrancan, el DNS resuelve, pero
+# cualquier conexión TCP entre ellos se queda colgada.
+#
+# Con network_mode: host todos comparten la red de la máquina y se hablan
+# por localhost, así que el bridge deja de importar.
+#
+# Uso:  make docker-host      (o: docker compose -f docker-compose.yml -f docker-compose.host.yml up -d --build)
+#
+# Solo Linux. En Docker Desktop (Mac/Windows) network_mode: host no se
+# comporta igual; ahí usa el docker-compose.yml normal.
+
+services:
+  mongodb:
+    network_mode: host
+
+  backend:
+    network_mode: host
+    environment:
+      MONGODB_URI: mongodb://localhost:27017
+      SEED_DEMO: "true"
+
+  frontend:
+    network_mode: host
+    environment:
+      BACKEND_HOST: 127.0.0.1

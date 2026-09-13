@@ -1,6 +1,6 @@
 .PHONY: help install dev backend frontend seed seed-nessie check \
         docker-build docker-up docker-down docker-logs docker-check \
-        docker up down
+        docker up down docker-host
 
 # Usa uv si está instalado; si no, cae a python/pip normal para que nadie
 # se quede trabado por no tener uv.
@@ -74,6 +74,17 @@ docker-up:
 
 docker-down:
 	docker compose down
+	-docker compose -f docker-compose.yml -f docker-compose.host.yml down
+
+# Plan B: si `make docker-up` levanta los contenedores pero el login se
+# queda colgado, la red bridge de Docker está filtrada en tu máquina y los
+# contenedores no se alcanzan entre sí. Esto los pone en la red del host.
+docker-host:
+	docker compose -f docker-compose.yml -f docker-compose.host.yml up -d --build
+	@echo ""
+	@echo "App en          http://localhost"
+	@echo "API directa en  http://localhost:8000"
+	@echo "Cuentas de prueba: navidena@demo.com / heladeria@demo.com / papeleria@demo.com  (contraseña: password)"
 
 # Alias, porque `make docker up` (con espacio) es el error fácil de cometer
 # y el mensaje de make no ayuda nada a entender qué pasó.

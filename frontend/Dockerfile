@@ -8,9 +8,9 @@ RUN npm ci --silent
 
 COPY . .
 
-# Nginx proxea /api → backend, así que la URL base es relativa
-ARG VITE_API_URL=/api
-ENV VITE_API_URL=${VITE_API_URL}
+# Sin VITE_API_URL a propósito: el build de producción usa rutas relativas
+# (nginx proxea /api en el mismo origen). Ponerle "/api" aquí duplicaba el
+# prefijo y todas las peticiones salían a /api/api/... con 404.
 
 RUN npm run build
 
@@ -18,7 +18,11 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Como template: el entrypoint de nginx corre envsubst al arrancar y
+# resuelve ${BACKEND_HOST}. Solo sustituye variables que existan en el
+# entorno, así que las de nginx ($host, $request_uri) quedan intactas.
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+ENV BACKEND_HOST=backend
 
 EXPOSE 80
 

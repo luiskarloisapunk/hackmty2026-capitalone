@@ -1,9 +1,20 @@
 .PHONY: help install dev backend frontend seed seed-nessie check \
         docker-build docker-up docker-down docker-logs docker-check \
-        docker up down docker-host
+        docker up down docker-host puertos-libres
 
 # Usa uv si está instalado; si no, cae a python/pip normal para que nadie
 # se quede trabado por no tener uv.
+# En Linux se usa la red del host por defecto: el bridge de Docker está
+# filtrado en Codespaces y en varios Docker-in-Docker, y ahí los
+# contenedores arrancan pero no se alcanzan entre sí (login con 504).
+# Docker Desktop (Mac/Windows) no soporta network_mode: host igual, así
+# que ahí se queda el compose normal.
+ifeq ($(shell uname -s),Linux)
+  COMPOSE := docker compose -f docker-compose.yml -f docker-compose.host.yml
+else
+  COMPOSE := docker compose
+endif
+
 UV := $(shell command -v uv 2>/dev/null)
 ifdef UV
   PY := uv run
@@ -50,7 +61,7 @@ backend:
 frontend:
 	cd frontend && npm run dev
 
-dev:
+dev: puertos-libres
 	@echo "Backend en http://localhost:8000  ·  Frontend en http://localhost:5173"
 	@echo "Cuentas de prueba: navidena@demo.com / heladeria@demo.com / papeleria@demo.com  (contraseña: password)"
 	@echo "Ctrl+C detiene ambos."
@@ -60,12 +71,12 @@ dev:
 	wait
 
 docker-build:
-	docker compose build
+	$(COMPOSE) build
 
 # Siempre reconstruye: la imagen congela el código, así que sin esto se
 # levanta la versión anterior después de un git pull.
-docker-up:
-	docker compose up -d --build
+docker-up: puertos-libres
+	$(COMPOSE) up -d --build
 	@echo ""
 	@echo "App en          http://localhost"
 	@echo "API directa en  http://localhost:8000"
@@ -73,7 +84,7 @@ docker-up:
 	@echo "Cuentas de prueba: navidena@demo.com / heladeria@demo.com / papeleria@demo.com  (contraseña: password)"
 
 docker-down:
-	docker compose down
+	-docker compose down
 	-docker compose -f docker-compose.yml -f docker-compose.host.yml down
 
 # Plan B: si `make docker-up` levanta los contenedores pero el login se
@@ -93,7 +104,16 @@ up: docker-up
 down: docker-down
 
 docker-logs:
-	docker compose logs -f
+	$(COMPOSE) logs -f
 
 docker-check:
-	docker compose exec backend python diagnostico.py
+	$(COMPOSE) exec backend python diagnostico.py
+
+# Si quedaron contenedores arriba, ocupan 8000 y 80 y luego `make dev`
+# falla con "address already in use" sin decir por qué.
+puertos-libres:
+	@if docker compose ps -q 2>/dev/null | grep -q . || \
+	    docker compose -f docker-compose.yml -f docker-compose.host.yml ps -q 2>/dev/null | grep -q .; then \
+	  echo "Hay contenedores del proyecto corriendo; los bajo primero..."; \
+	  $(MAKE) -s docker-down; \
+	fi

@@ -5,34 +5,50 @@
   /* Marca (paleta oficial del logo de Capital One) */
   --color-primary: #004879; /* Dark Water */
   --color-primary-hover: #003a61;
-  --color-accent: #D22E1E; /* Deep Coral */
+  --color-primary-dark: #002f4f;
+  --color-accent: #d22e1e; /* Deep Coral */
 
   /* Estados de temporada -- alta (caliente) / regular / baja (fría),
      separados en matiz Y en luminosidad para que no dependan solo del
      color (accesibilidad para daltonismo). Siempre acompañar con texto
      o ícono en la UI, nunca solo el color. */
-  --color-temporada-alta: #D22E1E;
-  --color-temporada-alta-bg: #FBE4E1;
-  --color-temporada-regular: #E29D12;
-  --color-temporada-regular-bg: #FBF0DA;
+  --color-temporada-alta: #d22e1e;
+  --color-temporada-alta-bg: #fbe4e1;
+  --color-temporada-alta-texto: #96190d;
+  --color-temporada-regular: #e29d12;
+  --color-temporada-regular-bg: #fbf0da;
+  --color-temporada-regular-texto: #7a5209;
   --color-temporada-baja: #097167;
-  --color-temporada-baja-bg: #DCF0EE;
+  --color-temporada-baja-bg: #dcf0ee;
+  --color-temporada-baja-texto: #06463f;
 
   /* Neutros (con un tinte frío sutil, del mismo matiz que --color-primary) */
   --color-neutral-900: #131516;
   --color-neutral-800: #212427;
-  --color-neutral-700: #34393D;
-  --color-neutral-500: #5E686E;
-  --color-neutral-300: #919BA1;
-  --color-neutral-200: #C2C8CB;
-  --color-neutral-100: #E3E6E8;
-  --color-neutral-50: #F4F5F6;
+  --color-neutral-700: #34393d;
+  --color-neutral-500: #5e686e;
+  --color-neutral-300: #919ba1;
+  --color-neutral-200: #c2c8cb;
+  --color-neutral-100: #e3e6e8;
+  --color-neutral-50: #f4f5f6;
 
   --color-bg: #ffffff;
   --color-surface: var(--color-neutral-50);
   --color-text: var(--color-neutral-900);
   --color-text-muted: var(--color-neutral-500);
   --color-border: var(--color-neutral-200);
+
+  /* Radios: el default es RECTO.
+     - `--radio-nulo` para paneles, tarjetas y avisos: bordes vivos.
+     - `--radio-suave` (2px) solo donde hace falta quitarle filo a un control.
+     - `--radio-pildora` para lo que debe leerse como una cápsula completa.
+     - `--radio-circulo` para puntos e indicadores redondos de verdad.
+     La mezcla de recto y circular da jerarquía; el redondeo intermedio en
+     todo es lo que hace que una interfaz se vea genérica. */
+  --radio-nulo: 0;
+  --radio-suave: 2px;
+  --radio-pildora: 999px;
+  --radio-circulo: 50%;
 }
 
 body {
@@ -43,5 +59,9 @@ body {
 
 #root {
   min-height: 100svh;
+  box-sizing: border-box;
+}
+
+* {
   box-sizing: border-box;
 }

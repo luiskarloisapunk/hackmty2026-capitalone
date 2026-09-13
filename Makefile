@@ -1,5 +1,6 @@
 .PHONY: help install dev backend frontend seed seed-nessie check \
-        docker-build docker-up docker-down docker-logs docker-check
+        docker-build docker-up docker-down docker-logs docker-check \
+        docker up down
 
 # Usa uv si está instalado; si no, cae a python/pip normal para que nadie
 # se quede trabado por no tener uv.
@@ -73,6 +74,12 @@ docker-up:
 
 docker-down:
 	docker compose down
+
+# Alias, porque `make docker up` (con espacio) es el error fácil de cometer
+# y el mensaje de make no ayuda nada a entender qué pasó.
+docker: docker-up
+up: docker-up
+down: docker-down
 
 docker-logs:
 	docker compose logs -f

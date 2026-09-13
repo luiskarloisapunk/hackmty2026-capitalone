@@ -8,4 +8,5 @@ dependencies = [
     "httpx",
     "python-dotenv",
     "pandas",
+    "numpy>=1.26",
 ]

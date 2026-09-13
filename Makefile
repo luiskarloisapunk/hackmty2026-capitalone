@@ -1,4 +1,4 @@
-.PHONY: install dev backend frontend seed
+.PHONY: install dev backend frontend seed docker-up docker-down docker-build docker-logs
 
 install:
 	cd backend && uv sync
@@ -19,3 +19,17 @@ dev:
 
 seed:
 	cd backend && uv run python ../seed_nessie.py
+
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d
+	@echo "App corriendo en http://localhost"
+	@echo "Docs API en  http://localhost/api/docs"
+
+docker-down:
+	docker compose down
+
+docker-logs:
+	docker compose logs -f

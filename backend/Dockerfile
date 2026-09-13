@@ -10,6 +10,7 @@ COPY pyproject.toml .
 RUN pip install --no-cache-dir .
 
 COPY app/ app/
+COPY seed_demo.py .
 
 EXPOSE 8000
 

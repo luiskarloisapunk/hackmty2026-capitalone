@@ -77,9 +77,6 @@ function App() {
       <div className="contenido">
         <header className="topbar">
           <h1 className="topbar-titulo">{TITULO_SECCION[seccion]}</h1>
-          {panorama?.negocio?.historial_es_sintetico && (
-            <span className="marca-datos">Datos del patrón de tu giro</span>
-          )}
         </header>
 
         <main className="pagina">

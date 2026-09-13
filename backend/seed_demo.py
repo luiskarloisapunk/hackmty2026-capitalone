@@ -48,6 +48,11 @@ NEGOCIOS_DEMO = [
 ]
 
 
+async def ya_sembrado() -> bool:
+    existente = await usuarios_collection.find_one({"email": NEGOCIOS_DEMO[0]["email"]})
+    return existente is not None
+
+
 async def sembrar() -> None:
     password_hash = hashear_password(PASSWORD_DEMO)
 

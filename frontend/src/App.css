@@ -183,14 +183,6 @@
   font-weight: 600;
 }
 
-.marca-datos {
-  font-size: 0.75rem;
-  color: var(--color-temporada-regular-texto);
-  background: var(--color-temporada-regular-bg);
-  padding: 5px 12px;
-  border-radius: var(--radio-pildora);
-}
-
 .pagina {
   padding: 26px 32px 56px;
   flex: 1;
@@ -230,38 +222,43 @@
 
 /* --- Pastillas de temporada: óvalo completo, a propósito --- */
 
+/* Cápsula plena: el estado de temporada es lo único que cambia de color en
+   toda la pantalla, así que se compromete con el color sólido en vez de
+   quedarse en un tinte lavado. El punto interno es un círculo hueco, para
+   que la cápsula lea como un indicador y no como un botón. */
 .pastilla {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 16px;
+  gap: 9px;
+  padding: 9px 20px 9px 16px;
   border-radius: var(--radio-pildora);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   white-space: nowrap;
+  color: #fff;
 }
 
 .pastilla::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: var(--radio-circulo);
-  background: currentColor;
+  border: 2px solid currentColor;
 }
 
 .pastilla-alta {
-  background: var(--color-temporada-alta-bg);
-  color: var(--color-temporada-alta-texto);
+  background: var(--color-temporada-alta);
 }
 
 .pastilla-regular {
-  background: var(--color-temporada-regular-bg);
+  background: var(--color-temporada-regular);
   color: var(--color-temporada-regular-texto);
 }
 
 .pastilla-baja {
-  background: var(--color-temporada-baja-bg);
-  color: var(--color-temporada-baja-texto);
+  background: var(--color-temporada-baja);
 }
 
 /* --- Métricas: bloques rectos, sin sombra --- */
@@ -296,8 +293,63 @@
   font-weight: 600;
 }
 
-.metrica-destacada {
-  border-top: 3px solid var(--color-primary);
+/* Métrica activable: es un filtro de la gráfica, así que se comporta como
+   control. La banda superior aparece solo cuando está encendida -- sin
+   selección ninguna métrica se adelanta a las otras. */
+.metrica-activable {
+  border: none;
+  border-top: 3px solid transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.metrica-activable:hover {
+  background: var(--color-neutral-50);
+}
+
+.metrica-activable.activa {
+  border-top-color: var(--color-primary);
+  background: var(--color-neutral-50);
+}
+
+.metrica-activable.activa .metrica-etiqueta {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.metrica-activable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.barra-foco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--color-neutral-50);
+  border-left: 3px solid var(--color-primary);
+  padding: 8px 14px;
+  margin-bottom: 12px;
+}
+
+.barra-foco-texto {
+  font-size: 0.84rem;
+  color: var(--color-text);
+}
+
+.barra-foco-limpiar {
+  background: transparent;
+  border: none;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .metrica-alerta {
@@ -376,7 +428,7 @@
 .muestra-linea {
   width: 16px;
   height: 0;
-  border-top: 2px dashed var(--color-primary);
+  border-top: 2.5px solid var(--color-primary);
   display: inline-block;
 }
 

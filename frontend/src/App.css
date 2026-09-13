@@ -1377,3 +1377,54 @@
   font-size: 0.85rem;
   color: var(--color-text-muted);
 }
+
+/* --- Proyección de la próxima temporada: ingreso, gasto y lo que queda --- */
+
+.pronostico-etiqueta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.proyeccion {
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0 4px;
+}
+
+.proyeccion-fila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+  font-size: 0.87rem;
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.proyeccion-fila strong {
+  font-family: 'Ubuntu Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1rem;
+}
+
+.proyeccion-gasto strong {
+  color: var(--color-accent);
+}
+
+/* El total cierra la resta: línea más marcada y cifra más grande, como en
+   un estado de cuenta. */
+.proyeccion-total {
+  border-bottom: none;
+  border-top: 2px solid var(--color-neutral-700);
+  padding-top: 9px;
+  margin-top: 2px;
+}
+
+.proyeccion-total span {
+  font-weight: 500;
+}
+
+.proyeccion-total strong {
+  font-size: 1.3rem;
+  font-weight: 700;
+}

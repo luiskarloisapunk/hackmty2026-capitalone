@@ -109,11 +109,20 @@ docker-logs:
 docker-check:
 	$(COMPOSE) exec backend python diagnostico.py
 
-# Si quedaron contenedores arriba, ocupan 8000 y 80 y luego `make dev`
-# falla con "address already in use" sin decir por qué.
+# Libera 8000, 5173 y 80 antes de arrancar. Dos cosas los pueden estar
+# ocupando y hay que cubrir ambas: contenedores del proyecto todavía
+# arriba, y un uvicorn/vite de un `make dev` anterior. En red host los dos
+# mundos comparten los mismos puertos, así que chocan en cualquier orden.
 puertos-libres:
 	@if docker compose ps -q 2>/dev/null | grep -q . || \
 	    docker compose -f docker-compose.yml -f docker-compose.host.yml ps -q 2>/dev/null | grep -q .; then \
 	  echo "Hay contenedores del proyecto corriendo; los bajo primero..."; \
 	  $(MAKE) -s docker-down; \
 	fi
+	@for puerto in 8000 5173 80; do \
+	  if command -v fuser >/dev/null 2>&1 && fuser $$puerto/tcp >/dev/null 2>&1; then \
+	    echo "Puerto $$puerto ocupado por un proceso anterior; lo libero..."; \
+	    fuser -k $$puerto/tcp >/dev/null 2>&1 || true; \
+	    sleep 1; \
+	  fi; \
+	done

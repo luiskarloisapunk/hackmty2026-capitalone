@@ -9,8 +9,7 @@ y regulacion.py, que razona en ciclos de temporada alta y no en meses.
 from app.services.regulacion import (
     TemporadaHistorica,
     calcular_crecimiento_interanual,
-    calcular_ratio_inventario,
-    proyectar_reserva_reinversion,
+    proyectar_temporada_alta,
 )
 from app.services.temporadas import TEMPORADA_ALTA, PerfilTemporadas
 
@@ -119,11 +118,19 @@ def construir_plan(
 
     siguiente_temporada = None
     if temporadas_altas:
+        proyeccion = proyectar_temporada_alta(temporadas_altas)
         siguiente_temporada = {
-            "reserva_objetivo": round(proyectar_reserva_reinversion(temporadas_altas), 2),
-            "ratio_historico_gasto_ingreso": round(calcular_ratio_inventario(temporadas_altas), 4),
+            "ingreso_proyectado": round(proyeccion["ingreso_proyectado"], 2),
+            "gasto_inventario_proyectado": round(proyeccion["gasto_inventario"], 2),
+            "margen_esperado": round(proyeccion["margen_esperado"], 2),
+            "ingreso_temporada_anterior": round(proyeccion["ingreso_temporada_anterior"], 2),
+            # Se conserva el nombre viejo: es lo que hay que apartar, y el
+            # motor de cuentas lo consume con esa clave.
+            "reserva_objetivo": round(proyeccion["gasto_inventario"], 2),
+            "ratio_historico_gasto_ingreso": round(proyeccion["ratio_gasto_ingreso"], 4),
             "ciclos_considerados": len(temporadas_altas),
-            "crecimiento_interanual": calcular_crecimiento_interanual(temporadas_altas),
+            "crecimiento_interanual": proyeccion["crecimiento_aplicado"],
+            "crecimiento_fue_estimado": proyeccion["crecimiento_fue_estimado"],
         }
 
     return {

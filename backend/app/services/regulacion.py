@@ -61,12 +61,37 @@ def proyectar_reserva_reinversion(
     crecimiento), se usa `crecimiento_default_heuristico` como placeholder
     -- reemplazar por una plantilla de crecimiento por sector cuando exista.
     """
+    return proyectar_temporada_alta(historial, crecimiento_default_heuristico)["gasto_inventario"]
+
+
+def proyectar_temporada_alta(
+    historial: list[TemporadaHistorica],
+    crecimiento_default_heuristico: float = 0.08,
+) -> dict:
+    """
+    El panorama completo de la siguiente temporada alta: cuánto se espera
+    vender, cuánto costará surtirse, y qué queda en medio.
+
+    La reserva por sí sola no dice nada: saber que hay que apartar $200k
+    solo es útil junto al ingreso que se espera recibir.
+    """
     ratio = calcular_ratio_inventario(historial)
     ultima_temporada = sorted(historial, key=lambda t: t.anio)[-1]
 
     crecimiento = calcular_crecimiento_interanual(historial)
-    if crecimiento is None:
+    crecimiento_estimado = crecimiento is None
+    if crecimiento_estimado:
         crecimiento = crecimiento_default_heuristico
 
     ingreso_proyectado = ultima_temporada.ingreso_temporada_alta * (1 + crecimiento)
-    return ratio * ingreso_proyectado
+    gasto_inventario = ratio * ingreso_proyectado
+
+    return {
+        "ingreso_proyectado": ingreso_proyectado,
+        "gasto_inventario": gasto_inventario,
+        "margen_esperado": ingreso_proyectado - gasto_inventario,
+        "ratio_gasto_ingreso": ratio,
+        "crecimiento_aplicado": crecimiento,
+        "crecimiento_fue_estimado": crecimiento_estimado,
+        "ingreso_temporada_anterior": ultima_temporada.ingreso_temporada_alta,
+    }

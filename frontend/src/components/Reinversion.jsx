@@ -72,6 +72,7 @@ export function Reinversion() {
           <span className="pronostico-periodo">
             Siguiente mes · {MESES[siguiente.mes - 1]} {siguiente.anio}
           </span>
+          <span className="pronostico-etiqueta">Gasto en inventario estimado</span>
           <span className="pronostico-cifra">{moneda(siguiente.gasto_inventario_estimado)}</span>
           <span className="pronostico-detalle">
             Base histórica {moneda(siguiente.base_historica)} ajustada por crecimiento
@@ -83,16 +84,34 @@ export function Reinversion() {
         {temporada && (
           <div className="pronostico pronostico-destacado">
             <span className="pronostico-periodo">Próxima temporada alta</span>
-            <span className="pronostico-cifra">{moneda(temporada.reserva_objetivo)}</span>
+
+            <div className="proyeccion">
+              <div className="proyeccion-fila">
+                <span>Ingreso que esperas recibir</span>
+                <strong>{moneda(temporada.ingreso_proyectado)}</strong>
+              </div>
+              <div className="proyeccion-fila proyeccion-gasto">
+                <span>Lo que te costará surtirte</span>
+                <strong>− {moneda(temporada.gasto_inventario_proyectado)}</strong>
+              </div>
+              <div className="proyeccion-fila proyeccion-total">
+                <span>Te queda</span>
+                <strong>{moneda(temporada.margen_esperado)}</strong>
+              </div>
+            </div>
+
             <span className="pronostico-detalle">
-              Gastas {porcentaje(temporada.ratio_historico_gasto_ingreso, 1)} de tu ingreso de
-              temporada alta en inventario
+              El inventario se lleva {porcentaje(temporada.ratio_historico_gasto_ingreso, 1)} de tu
+              ingreso de temporada alta. Eso es lo que hay que tener apartado antes de que empiece.
             </span>
             <span className="pronostico-fuente">
-              Sobre {temporada.ciclos_considerados}{' '}
+              Proyectado desde {moneda(temporada.ingreso_temporada_anterior)} de la temporada
+              anterior, sobre {temporada.ciclos_considerados}{' '}
               {temporada.ciclos_considerados === 1 ? 'ciclo completo' : 'ciclos completos'}
               {temporada.crecimiento_interanual !== null &&
-                ` · crecimiento interanual ${porcentaje(temporada.crecimiento_interanual, 1)}`}
+                ` · crecimiento ${porcentaje(temporada.crecimiento_interanual, 1)}${
+                  temporada.crecimiento_fue_estimado ? ' (estimado)' : ''
+                }`}
             </span>
           </div>
         )}

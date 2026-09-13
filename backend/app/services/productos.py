@@ -75,7 +75,7 @@ def describir_productos() -> list[dict]:
         },
         {
             "id": "plazo_fijo",
-            "tipo_nessie": "Investment",
+            "tipo_nessie": "Savings",  # Nessie no tiene tipo "Investment"
             "nombre": "Inversión a plazo (Cetes)",
             "descripcion": (
                 "El excedente de tu temporada alta invertido en Cetes a 28 días, "
@@ -93,7 +93,7 @@ def describir_productos() -> list[dict]:
         },
         {
             "id": "acciones",
-            "tipo_nessie": "Investment",
+            "tipo_nessie": "Savings",  # Nessie no tiene tipo "Investment"
             "nombre": "Paquete de acciones",
             "descripcion": (
                 "Canasta diversificada de acciones. Mayor rendimiento potencial y "

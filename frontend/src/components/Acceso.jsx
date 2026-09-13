@@ -6,6 +6,7 @@ const CUENTAS_DEMO = [
   { email: 'navidena@demo.com', negocio: 'Decoraciones del Norte', giro: 'Retail navideño' },
   { email: 'heladeria@demo.com', negocio: 'Nieves del Valle', giro: 'Heladería' },
   { email: 'papeleria@demo.com', negocio: 'Papelería Monterrey', giro: 'Papelería escolar' },
+  { email: 'agro@demo.com', negocio: 'Agrícola Treviño', giro: 'Maíz de temporal' },
 ]
 
 export function Acceso({ onAutenticado }) {

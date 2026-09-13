@@ -67,11 +67,12 @@ PLANTILLAS: dict[str, PerfilNegocio] = {
         base_mensual=55000,
         amplitud=70000,
         periodo_meses=12,
-        fase_meses=6,  # pico en septiembre-octubre
+        fase_meses=7,  # pico en noviembre (cosecha del ciclo primavera-verano)
         crecimiento_mensual=400,
         ruido_relativo=0.11,
         gasto_inventario_min=0.40,
         gasto_inventario_max=0.60,
+        desfase_insumos_meses=5,  # semilla y fertilizante se compran al sembrar, en junio
     ),
     "constante": PerfilNegocio(
         nombre="Negocio sin estacionalidad marcada",

@@ -103,7 +103,7 @@ function TarjetaCuenta({ producto, saldo, abierta, onAlternar, desglose }) {
                 <strong>{moneda(desglose.colchon_temporada_baja)}</strong>
               </div>
               <div className="desglose-fila">
-                <span>Inventario del próximo mes</span>
+                <span>Inventario o insumos del próximo mes</span>
                 <strong>{moneda(desglose.inventario_proximo_mes)}</strong>
               </div>
             </div>

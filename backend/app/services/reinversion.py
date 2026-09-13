@@ -19,28 +19,62 @@ def construir_temporadas_altas(
     gastos_por_periodo: dict[tuple[int, int], float],
 ) -> list[TemporadaHistorica]:
     """
-    Agrupa los meses clasificados como temporada alta por año y suma su
-    ingreso y su gasto de inventario, que es la forma en que regulacion.py
-    espera el historial.
+    Arma cada ciclo de temporada alta con su ingreso y con TODO lo que se
+    gastó para llegar a él: la preparación previa más lo gastado durante la
+    temporada. Contar solo el gasto de los meses altos subestima el costo
+    cuando la compra ocurre antes de vender -- en el campo, la semilla y el
+    fertilizante se pagan meses antes de cosechar.
+
+    Los ciclos se agrupan por el año en que empiezan, así una temporada que
+    cruza de año (nov–feb) no se parte en dos, y un negocio con dos picos al
+    año se compara contra su mismo año anterior.
     """
-    acumulado: dict[int, dict[str, float]] = {}
+    ciclos: list[dict] = []
+    pendiente = 0.0
+    actual: dict | None = None
+    meses_fuera = 0
+    gasto_en_pausa = 0.0
 
     for mes in perfil.historial_clasificado:
-        if mes.temporada != TEMPORADA_ALTA:
-            continue
-        registro = acumulado.setdefault(mes.anio, {"ingreso": 0.0, "gasto": 0.0, "meses": 0})
-        registro["ingreso"] += mes.monto
-        registro["gasto"] += gastos_por_periodo.get((mes.anio, mes.mes), 0.0)
-        registro["meses"] += 1
+        gasto = gastos_por_periodo.get((mes.anio, mes.mes), 0.0)
 
-    if not acumulado:
+        if mes.temporada == TEMPORADA_ALTA:
+            if actual is None:
+                actual = {"anio": mes.anio, "ingreso": 0.0, "gasto": pendiente}
+                pendiente = 0.0
+            # Un solo mes flojo dentro de la temporada no la parte en dos.
+            actual["gasto"] += gasto_en_pausa
+            gasto_en_pausa = 0.0
+            meses_fuera = 0
+            actual["ingreso"] += mes.monto
+            actual["gasto"] += gasto
+        elif actual is None:
+            pendiente += gasto
+        else:
+            meses_fuera += 1
+            gasto_en_pausa += gasto
+            if meses_fuera >= 2:
+                ciclos.append(actual)
+                actual = None
+                pendiente = gasto_en_pausa
+                gasto_en_pausa = 0.0
+                meses_fuera = 0
+
+    # El primer ciclo no trae completa su preparación (el historial empieza a
+    # la mitad) y el que sigue abierto al final no ha terminado: ninguno es
+    # comparable, así que quedan fuera.
+    completos = ciclos[1:]
+    if not completos:
         return []
 
-    # El primer y el último año del historial suelen traer la temporada
-    # cortada a la mitad. Compararlos contra un año completo inventa
-    # crecimientos negativos enormes, así que solo se consideran los ciclos
-    # con tantos meses altos como el más completo que se haya observado.
-    meses_ciclo_completo = max(v["meses"] for v in acumulado.values())
+    por_anio: dict[int, dict[str, float]] = {}
+    for ciclo in completos:
+        grupo = por_anio.setdefault(ciclo["anio"], {"ingreso": 0.0, "gasto": 0.0, "ciclos": 0})
+        grupo["ingreso"] += ciclo["ingreso"]
+        grupo["gasto"] += ciclo["gasto"]
+        grupo["ciclos"] += 1
+
+    ciclos_por_anio = max(g["ciclos"] for g in por_anio.values())
 
     return [
         TemporadaHistorica(
@@ -48,8 +82,8 @@ def construir_temporadas_altas(
             ingreso_temporada_alta=valores["ingreso"],
             gasto_inventario_temporada_alta=valores["gasto"],
         )
-        for anio, valores in sorted(acumulado.items())
-        if valores["gasto"] > 0 and valores["meses"] == meses_ciclo_completo
+        for anio, valores in sorted(por_anio.items())
+        if valores["gasto"] > 0 and valores["ciclos"] == ciclos_por_anio
     ]
 
 

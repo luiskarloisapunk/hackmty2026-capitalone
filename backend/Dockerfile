@@ -11,6 +11,9 @@ RUN pip install --no-cache-dir .
 
 COPY app/ app/
 COPY seed_demo.py .
+# Para poder diagnosticar el contenedor:
+#   docker compose exec backend python diagnostico.py
+COPY diagnostico.py .
 
 EXPOSE 8000
 

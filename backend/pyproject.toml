@@ -7,4 +7,5 @@ dependencies = [
     "uvicorn[standard]",
     "httpx",
     "python-dotenv",
+    "numpy>=1.26",
 ]

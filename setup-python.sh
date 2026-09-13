@@ -36,7 +36,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_URL = os.getenv("NESSIE_BASE_URL", "http://api.nessieisreal.com")
-API_KEY = os.getenv("NESSIE_API_KEY")
+API_KEY = os.getenv("81fa9e32900f513480ffda5113100fdb")
 
 
 class NessieClient:

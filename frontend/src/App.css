@@ -64,7 +64,32 @@
 .sidebar-footer {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
+}
+
+.sidebar-footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  width: fit-content;
+}
+
+.sidebar-footer-label {
+  font-size: 0.68rem;
+  color: var(--color-neutral-500);
+  white-space: nowrap;
+}
+
+.sidebar-footer-logo {
+  height: 14px;
+  width: auto;
+  display: block;
+}
+
+.sidebar-footer > span {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.7rem;
   letter-spacing: 0.03em;

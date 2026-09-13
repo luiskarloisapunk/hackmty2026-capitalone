@@ -1,3 +1,4 @@
+import capitalOneLogo from '../assets/Capital_One_logo.svg'
 import { Logo } from './Logo'
 
 const SECCIONES = [
@@ -27,7 +28,10 @@ export function Sidebar({ seccionActiva, onCambiarSeccion }) {
       </nav>
 
       <div className="sidebar-footer">
-        <span>Capital One Challenge</span>
+        <div className="sidebar-footer-badge">
+          <span className="sidebar-footer-label">Built for the</span>
+          <img src={capitalOneLogo} alt="Capital One" className="sidebar-footer-logo" />
+        </div>
         <span>HackMTY 2026</span>
       </div>
     </aside>

@@ -27,6 +27,9 @@ class PerfilNegocio:
     ruido_relativo: float = 0.05
     gasto_inventario_min: float = 0.25
     gasto_inventario_max: float = 0.45
+    # Cuántos meses antes de vender se hace el gasto: un comercio se surte un
+    # mes antes; un productor compra semilla y fertilizante al sembrar.
+    desfase_insumos_meses: int = 1
 
 
 @dataclass
@@ -59,11 +62,23 @@ def generar_historial(
     tendencia = perfil.base_mensual + perfil.crecimiento_mensual * t
     ingresos = tendencia + ciclo
     ingresos = ingresos * rng.normal(1.0, perfil.ruido_relativo, meses)
-    ingresos = np.clip(ingresos, perfil.base_mensual * 0.15, None).round(2)
 
     porcentajes = rng.uniform(perfil.gasto_inventario_min, perfil.gasto_inventario_max, meses)
-    # El inventario se compra un mes antes de venderlo.
-    referencia = np.concatenate([ingresos[1:], ingresos[-1:]])
+
+    # Piso con variación: con un piso fijo los meses sin venta salían todos
+    # idénticos, lo que delata que el historial es sintético. Se sortea al
+    # final para no mover el ruido ni los porcentajes de los perfiles que ya
+    # existían.
+    piso = perfil.base_mensual * 0.15 * rng.uniform(0.75, 1.25, meses)
+    ingresos = np.maximum(ingresos, piso).round(2)
+
+    # El gasto se hace `desfase_insumos_meses` antes de la venta a la que
+    # corresponde. Para los últimos meses, cuya venta cae fuera del
+    # historial, se toma el mismo mes del ciclo anterior.
+    indices = np.arange(meses) + perfil.desfase_insumos_meses
+    fuera = indices >= meses
+    indices[fuera] = np.maximum(indices[fuera] - perfil.periodo_meses, 0)
+    referencia = ingresos[np.minimum(indices, meses - 1)]
     gastos = (referencia * porcentajes).round(2)
 
     registros = []

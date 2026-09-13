@@ -47,9 +47,9 @@ export function Reinversion() {
     <div className="seccion">
       <header className="seccion-encabezado">
         <div>
-          <h2 className="seccion-titulo">Reinversión en inventario</h2>
+          <h2 className="seccion-titulo">Reinversión en inventario e insumos</h2>
           <p className="seccion-bajada">
-            Cuánto has gastado en surtirte, cuánto toca el mes que entra y
+            Cuánto has invertido en inventario o insumos, cuánto toca el mes que entra y
             cuánto vas a necesitar para tu próxima temporada alta.
           </p>
         </div>
@@ -72,7 +72,7 @@ export function Reinversion() {
           <span className="pronostico-periodo">
             Siguiente mes · {MESES[siguiente.mes - 1]} {siguiente.anio}
           </span>
-          <span className="pronostico-etiqueta">Gasto en inventario estimado</span>
+          <span className="pronostico-etiqueta">Gasto en inventario o insumos estimado</span>
           <span className="pronostico-cifra">{moneda(siguiente.gasto_inventario_estimado)}</span>
           <span className="pronostico-detalle">
             Base histórica {moneda(siguiente.base_historica)} ajustada por crecimiento
@@ -91,7 +91,7 @@ export function Reinversion() {
                 <strong>{moneda(temporada.ingreso_proyectado)}</strong>
               </div>
               <div className="proyeccion-fila proyeccion-gasto">
-                <span>Lo que te costará surtirte</span>
+                <span>Lo que te costará prepararla</span>
                 <strong>− {moneda(temporada.gasto_inventario_proyectado)}</strong>
               </div>
               <div className="proyeccion-fila proyeccion-total">
@@ -101,7 +101,7 @@ export function Reinversion() {
             </div>
 
             <span className="pronostico-detalle">
-              El inventario se lleva {porcentaje(temporada.ratio_historico_gasto_ingreso, 1)} de tu
+              Inventario e insumos se llevan {porcentaje(temporada.ratio_historico_gasto_ingreso, 1)} de tu
               ingreso de temporada alta. Eso es lo que hay que tener apartado antes de que empiece.
             </span>
             <span className="pronostico-fuente">
@@ -119,7 +119,7 @@ export function Reinversion() {
 
       <div className="panel-grafica">
         <div className="grafica-encabezado">
-          <h3>Gasto en inventario contra ingreso del mes</h3>
+          <h3>Gasto en inventario o insumos contra ingreso del mes</h3>
           <div className="leyenda">
             <span className="leyenda-item"><i className="muestra-punto" style={{ background: COLOR_TEMPORADA.alta }} /> Alta</span>
             <span className="leyenda-item"><i className="muestra-punto" style={{ background: COLOR_TEMPORADA.regular }} /> Regular</span>
@@ -148,7 +148,7 @@ export function Reinversion() {
             <Tooltip
               formatter={(valor, nombre) => [
                 moneda(valor),
-                nombre === 'gasto_inventario' ? 'Gasto en inventario' : 'Ingreso',
+                nombre === 'gasto_inventario' ? 'Inventario o insumos' : 'Ingreso',
               ]}
             />
             <Bar dataKey="gasto_inventario" maxBarSize={30} radius={0} isAnimationActive={false}>

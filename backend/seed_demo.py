@@ -45,6 +45,14 @@ NEGOCIOS_DEMO = [
         "saldo_operacion": 19800.0,
         "seed": 303,
     },
+    {
+        "email": "agro@demo.com",
+        "nombre": "Ramiro Treviño",
+        "nombre_negocio": "Agrícola Treviño",
+        "plantilla_id": "agricola",
+        "saldo_operacion": 30000.0,
+        "seed": 404,
+    },
 ]
 
 

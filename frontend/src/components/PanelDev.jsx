@@ -5,6 +5,7 @@ const CUENTAS = [
   { email: 'navidena@demo.com', etiqueta: 'Decoraciones del Norte', nota: 'pico Nov–Dic' },
   { email: 'heladeria@demo.com', etiqueta: 'Nieves del Valle', nota: 'pico Jun–Ago' },
   { email: 'papeleria@demo.com', etiqueta: 'Papelería Monterrey', nota: 'picos Feb y Ago' },
+  { email: 'agro@demo.com', etiqueta: 'Agrícola Treviño', nota: 'cosecha Sep–Ene' },
 ]
 
 /**

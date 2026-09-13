@@ -13,4 +13,5 @@ dependencies = [
     "bcrypt",
     "pyjwt",
     "email-validator",
+    "python-multipart",
 ]

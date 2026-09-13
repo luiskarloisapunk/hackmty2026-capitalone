@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_URL = os.getenv("NESSIE_BASE_URL", "http://api.nessieisreal.com")
+# Nessie solo responde por HTTPS; por HTTP la conexión se cae sin respuesta.
+# (api.reimaginebanking.com, el dominio viejo, ya ni siquiera resuelve DNS.)
+BASE_URL = os.getenv("NESSIE_BASE_URL", "https://api.nessieisreal.com")
 API_KEY = os.getenv("NESSIE_API_KEY")
 
 

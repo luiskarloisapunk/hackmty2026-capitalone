@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import customers, accounts
 from app.routers import treasury
 from app.routers import temporadas
+from app.routers import negocios
 from app.routers import auth
 
 app = FastAPI(title="HackMTY Backend")
@@ -18,6 +19,7 @@ app.include_router(customers.router)
 app.include_router(accounts.router)
 app.include_router(treasury.router)
 app.include_router(temporadas.router)
+app.include_router(negocios.router)
 app.include_router(auth.router)
 
 

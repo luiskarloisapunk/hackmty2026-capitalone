@@ -13,6 +13,7 @@ from app.services.auth import (
     hashear_password,
     verificar_password,
 )
+from app.services import negocio_service
 from app.services.db import db
 
 usuarios_collection = db["usuarios"]
@@ -31,6 +32,15 @@ class RegistroRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8)
     nombre: str = Field(min_length=1)
+    nombre_negocio: str = Field(min_length=1)
+    tiene_historial: bool = Field(
+        default=False,
+        description="Si ya lleva registro de sus finanzas. Si es true, sube su CSV después del registro.",
+    )
+    plantilla_id: str | None = Field(
+        default=None,
+        description="Giro con el que arranca cuando no tiene historial propio.",
+    )
 
 
 class LoginRequest(BaseModel):
@@ -68,6 +78,13 @@ async def registrar_usuario(body: RegistroRequest) -> TokenResponse:
     }
     resultado = await usuarios_collection.insert_one(documento)
     usuario_id = str(resultado.inserted_id)
+
+    await negocio_service.crear_perfil(
+        usuario_id=usuario_id,
+        nombre_negocio=body.nombre_negocio,
+        plantilla_id=body.plantilla_id,
+        tiene_historial=body.tiene_historial,
+    )
 
     token = crear_token_acceso(subject=usuario_id)
     return TokenResponse(

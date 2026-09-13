@@ -1,4 +1,5 @@
 .env
+apis.env
 .direnv/
 __pycache__/
 *.pyc

@@ -16,3 +16,12 @@ def crear_cuenta_ahorro(customer_id: str, nickname: str, balance: float):
         "balance": balance
     }
     return nessie.post(f"/customers/{customer_id}/accounts", body)
+
+def crear_cuenta_inversion(customer_id: str, nickname: str, balance: float):
+    body = {
+        "type": "Investment",
+        "nickname": nickname,
+        "rewards": 0,
+        "balance": balance
+    }
+    return nessie.post(f"/customers/{customer_id}/accounts", body)

@@ -18,4 +18,4 @@ dev:
 	wait
 
 seed:
-	cd backend && uv run python ../scripts/seed_nessie.py
+	cd backend && uv run python ../seed_nessie.py

@@ -181,6 +181,55 @@ class CashFlowEngine:
         return predictions
 
     # ------------------------------------------------------------------
+    # Simulación estocástica (bootstrap de residuos)
+    # ------------------------------------------------------------------
+
+    def simulate(
+        self,
+        flows: np.ndarray,
+        horizon: int = 30,
+        n_sims: int = 500,
+        seed: int | None = None,
+    ) -> np.ndarray:
+        """
+        Proyecta `horizon` días en `n_sims` trayectorias, remuestreando los
+        residuos reales del ajuste en cada paso.
+
+        Por qué esto y no `predict()`: el pronóstico puntual de un AR(p)
+        iterado converge a la media (la incertidumbre se promedia a cero en
+        cada paso), así que sale una línea casi plana y su acumulado sale
+        casi recto -- el "escenario ideal" que no existe en la vida real.
+        Al reinyectar ruido muestreado de los residuos (bootstrap), cada
+        trayectoria conserva la volatilidad que el negocio realmente tiene,
+        y los percentiles de esas trayectorias dan la banda de confianza.
+
+        Retorna
+        -------
+        np.ndarray de forma (n_sims, horizon)
+        """
+        if not self._fitted:
+            raise RuntimeError("Llama a fit() antes de simulate().")
+
+        A, b = self._build_design_matrix(flows, self.lag)
+        residuos = b - A @ self._beta
+
+        rng = np.random.default_rng(seed)
+        ventanas = np.tile(self._history, (n_sims, 1))  # (n_sims, lag)
+        trayectorias = np.empty((n_sims, horizon), dtype=np.float64)
+
+        intercepto = self._beta[0]
+        pesos = self._beta[1:]
+
+        for paso in range(horizon):
+            choques = rng.choice(residuos, size=n_sims, replace=True)
+            siguiente = intercepto + ventanas @ pesos + choques
+            trayectorias[:, paso] = siguiente
+            ventanas = np.roll(ventanas, -1, axis=1)
+            ventanas[:, -1] = siguiente
+
+        return trayectorias
+
+    # ------------------------------------------------------------------
     # Diagnóstico
     # ------------------------------------------------------------------
 

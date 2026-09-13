@@ -17,8 +17,12 @@ services:
     build: ./backend
     env_file: .env
     environment:
-      # Sobrescribe MONGODB_URI para usar el servicio interno de Docker
+      # Sobrescribe MONGODB_URI para usar el servicio interno de Docker.
+      # Si prefieren que el stack pegue a Atlas, comenten esta línea y dejen
+      # que tome la MONGODB_URI del .env.
       MONGODB_URI: mongodb://mongodb:27017
+      # Siembra las 3 cuentas de demo al arrancar si todavía no existen.
+      SEED_DEMO: "true"
     ports:
       - "8000:8000"
     depends_on:

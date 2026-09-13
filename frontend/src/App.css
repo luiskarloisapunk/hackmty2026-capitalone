@@ -1,35 +1,273 @@
-.pantalla {
-  min-height: 100vh;
+/* --- Shell: sidebar + contenido --- */
+
+.shell {
+  display: flex;
+  min-height: 100svh;
   width: 100%;
-  background-color: #ffffff;
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--color-primary);
+  color: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 48px 16px;
-  gap: 24px;
+  padding: 20px 16px;
+  gap: 32px;
 }
 
-.titulo {
-  font-size: 1.75rem;
-  color: #111111;
-  margin: 0;
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
+.marca-nombre {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-item {
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.nav-item.activo {
+  background: rgba(255, 255, 255, 0.14);
+  border-left-color: var(--color-accent);
+  color: #fff;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.contenido {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.topbar-titulo {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.pagina {
+  padding: 24px 32px 48px;
+  flex: 1;
+  background: var(--color-surface);
+}
+
+/* --- Resumen --- */
+
+.resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 920px;
+}
+
+.dato-ejemplo {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.dato-ejemplo code {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.pyme-card,
+.chart-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.pyme-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pyme-nombre {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.pyme-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.stat {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* --- Pills de temporada --- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pill::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill.alta {
+  background: var(--color-temporada-alta-bg);
+  color: #96190D;
+}
+
+.pill.regular {
+  background: var(--color-temporada-regular-bg);
+  color: #7A5209;
+}
+
+.pill.baja {
+  background: var(--color-temporada-baja-bg);
+  color: #06463F;
+}
+
+/* --- Gráfico --- */
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-item i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-item i.legend-linea {
+  width: 14px;
+  height: 0;
+  border-radius: 0;
+  border-top: 2px dashed var(--color-primary);
+}
+
+/* --- Vista de Clientes/Cuentas (existente) --- */
 
 .subtitulo {
-  font-size: 1.25rem;
-  color: #111111;
+  font-size: 1.1rem;
+  color: var(--color-text);
   margin: 0 0 12px;
 }
 
 .texto {
-  font-size: 1rem;
-  color: #111111;
+  font-size: 0.95rem;
+  color: var(--color-text);
   margin: 0;
-  text-align: center;
 }
 
 .texto.error {
-  color: #b00020;
+  color: var(--color-accent);
 }
 
 .lista {
@@ -38,30 +276,63 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  max-width: 320px;
+  max-width: 340px;
 }
 
 .boton {
   width: 100%;
-  padding: 12px 24px;
-  font-size: 1rem;
-  color: #ffffff;
-  background-color: #111111;
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 8px;
   cursor: pointer;
 }
 
 .boton:hover {
-  background-color: #333333;
+  background-color: var(--color-primary-hover);
 }
 
 .detalle {
   width: 100%;
-  max-width: 320px;
-  text-align: center;
-  border-top: 1px solid #e5e5e5;
-  padding-top: 24px;
+  max-width: 340px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 720px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    gap: 16px;
+  }
+
+  .nav {
+    flex-direction: row;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .topbar,
+  .pagina {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }

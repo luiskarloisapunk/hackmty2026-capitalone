@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  font: 18px/145% system-ui, 'Segoe UI', Roboto, sans-serif;
+  font: 16px/145% 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
 
   /* Marca (paleta oficial del logo de Capital One) */
   --color-primary: #004879; /* Dark Water */

@@ -18,13 +18,18 @@ export function Sidebar({ seccionActiva, onCambiarSeccion, negocio, onSalir }) {
       </div>
 
       {negocio && (
-        <div className="sidebar-negocio">
+        <button
+          type="button"
+          className={`sidebar-negocio ${seccionActiva === 'perfil' ? 'activo' : ''}`}
+          onClick={() => onCambiarSeccion('perfil')}
+          title="Ver el perfil del negocio"
+        >
           <span className="sidebar-negocio-inicial">{negocio.nombre?.charAt(0)}</span>
           <span className="sidebar-negocio-datos">
             <span className="sidebar-negocio-nombre">{negocio.nombre}</span>
             <span className="sidebar-negocio-giro">{negocio.giro}</span>
           </span>
-        </div>
+        </button>
       )}
 
       <nav className="nav">

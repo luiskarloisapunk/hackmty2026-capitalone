@@ -61,6 +61,14 @@ export function obtenerPanorama() {
   return pedir('/api/negocios/mio/panorama')
 }
 
+export function obtenerPerfil() {
+  return pedir('/api/negocios/mio/perfil')
+}
+
+export function vincularNessie() {
+  return pedir('/api/negocios/mio/nessie/vincular', { metodo: 'POST', cuerpo: {} })
+}
+
 export function obtenerReinversion() {
   return pedir('/api/negocios/mio/reinversion')
 }

@@ -42,8 +42,11 @@ async def crear_cuenta_ahorro(customer_id: str, nickname: str, balance: float):
     return resultado_nessie
 
 async def crear_cuenta_inversion(customer_id: str, nickname: str, balance: float):
+    # Nessie no tiene un tipo "Investment": su enum solo admite 'Checking',
+    # 'Savings' y 'Credit Card', y manda 400 con cualquier otra cosa. La
+    # cuenta de inversión se abre como Savings y se distingue por el apodo.
     body = {
-        "type": "Investment",
+        "type": "Savings",
         "nickname": nickname,
         "rewards": 0,
         "balance": balance

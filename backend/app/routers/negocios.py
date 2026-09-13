@@ -8,13 +8,14 @@ from __future__ import annotations
 
 import io
 
+import httpx
 import pandas as pd
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.routers.auth import UsuarioOut, obtener_usuario_actual
-from app.services import negocio_service
+from app.services import negocio_service, perfil_service
 from app.services.liquidez import proyectar_liquidez
 from app.services.plantillas_negocio import listar_plantillas
 from app.services.productos import describir_productos, tasa_referencia_vigente
@@ -137,6 +138,39 @@ async def mi_negocio(usuario: UsuarioOut = Depends(obtener_usuario_actual)) -> d
 async def panorama(usuario: UsuarioOut = Depends(obtener_usuario_actual)) -> dict:
     perfil = await _perfil_requerido(usuario)
     return negocio_service.construir_panorama(perfil)
+
+
+@router.get("/mio/perfil")
+async def perfil_completo(usuario: UsuarioOut = Depends(obtener_usuario_actual)) -> dict:
+    perfil = await _perfil_requerido(usuario)
+    return perfil_service.construir_perfil(
+        perfil_negocio=perfil,
+        usuario={"id": usuario.id, "nombre": usuario.nombre, "email": usuario.email},
+        panorama=negocio_service.construir_panorama(perfil),
+    )
+
+
+@router.post("/mio/nessie/vincular")
+async def vincular_nessie(usuario: UsuarioOut = Depends(obtener_usuario_actual)) -> dict:
+    """Da de alta el negocio en Nessie con los saldos que calculó el motor."""
+    perfil = await _perfil_requerido(usuario)
+
+    if perfil.get("nessie_customer_id"):
+        return perfil_service.estado_nessie(perfil)
+
+    panorama_actual = negocio_service.construir_panorama(perfil)
+    if not panorama_actual.get("listo"):
+        raise HTTPException(
+            status_code=400,
+            detail="Necesitas historial suficiente antes de dar de alta las cuentas en Nessie",
+        )
+
+    try:
+        return await perfil_service.vincular_con_nessie(perfil, panorama_actual["cuentas"])
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=502, detail=f"Nessie no respondió: {type(e).__name__}")
+    except (KeyError, TypeError):
+        raise HTTPException(status_code=502, detail="Nessie respondió en un formato inesperado")
 
 
 @router.get("/mio/reinversion")

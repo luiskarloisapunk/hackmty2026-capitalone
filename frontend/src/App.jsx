@@ -5,6 +5,7 @@ import { Cuentas } from './components/Cuentas'
 import { Historial } from './components/Historial'
 import { Inicio } from './components/Inicio'
 import { Liquidez } from './components/Liquidez'
+import { Perfil } from './components/Perfil'
 import { PanelDev } from './components/PanelDev'
 import { Reinversion } from './components/Reinversion'
 import { Sidebar } from './components/Sidebar'
@@ -16,6 +17,7 @@ const TITULO_SECCION = {
   liquidez: 'Liquidez',
   reinversion: 'Reinversión',
   historial: 'Mi historial',
+  perfil: 'Perfil del negocio',
 }
 
 function App() {
@@ -96,6 +98,7 @@ function App() {
               {seccion === 'cuentas' && <Cuentas panorama={panorama} />}
               {seccion === 'liquidez' && <Liquidez />}
               {seccion === 'reinversion' && <Reinversion />}
+              {seccion === 'perfil' && <Perfil />}
             </>
           )}
 
